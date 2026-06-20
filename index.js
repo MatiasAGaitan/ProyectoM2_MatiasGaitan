@@ -12,6 +12,7 @@ const routersPosts = require('./src/Routers/routersPosts')
 
 app.use(express.json())
 app.use('/authors',routersAuthors)
+app.use('/posts',routersPosts)
 
 app.use(errorHandler)
 
