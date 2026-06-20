@@ -1,5 +1,4 @@
-
-const { error } = require('node:console')
+// importamos los servicios
 const {
     getServicePosts,
     getServicePostId,
@@ -16,11 +15,7 @@ const getPost = async (req,res,next) =>{
 
 const getPostId = async(req,res,next) => {
     try {
-        const id = Number(req.params.id)
-        if(isNaN(id) || !Number.isInteger(id) || id <= 0 ){
-            return res.status(400).json({error:'Valor de id incorrecto , debe ser un numero entero y positivo'})}  
-
-        const post = await getServicePostId (id)
+        const post = await getServicePostId (req.validatedId)
 
         if(!post){return res.status(404).json({error:'Post no encontrado'})}
         res.status(200).json(post)
@@ -32,11 +27,7 @@ const getPostId = async(req,res,next) => {
 
 const getPostAuthorId = async(req,res,next) => {
     try {
-        const authorId = Number(req.params.authorId)
-        if(isNaN(authorId) || !Number.isInteger(authorId) || authorId <= 0){
-            return res.status(400).json({error:'valor de AuthorId incorrecto, debe ser un numero entero y positivo'})}
-        
-        const post = await getServicePostAuthorId (authorId)
+        const post = await getServicePostAuthorId (req.validatedAuthorId)
 
         if (post.length === 0 ){return res.status(404).json({error:'Post no encontrado'})}
         res.status(200).json(post)
@@ -46,7 +37,7 @@ const getPostAuthorId = async(req,res,next) => {
     }
 }
 
-
+// exportamos los controladores
 module.exports = {
     getPost,
     getPostId,

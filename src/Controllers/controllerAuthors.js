@@ -17,12 +17,9 @@ const getAuthors = async (req,res,next) =>{
 
 const getAuthorId = async(req,res,next) => {
     try { 
-        const id = Number(req.params.id)
-        if(isNaN(id) || !Number.isInteger(id) || id <= 0 ){
-            return res.status(400).json({error:'Valor de id incorrecto , debe ser un numero entero y positivo'})}
-        const author = await getServiceAuthorId(id)
+        const author = await getServiceAuthorId(req.validatedId)
         if (!author){
-            return res.status(404).json({error:'Author no encontrado'})}
+            return res.status(404).json({error:'Autor no encontrado'})}
         res.status(200).json(author)
         
     } catch (error) {
@@ -52,10 +49,6 @@ const postAuthor = async(req,res,next) => {
 
 const putAuthor = async(req,res,next) =>{
     try {
-        const id = Number(req.params.id)
-        if(isNaN(id) || !Number.isInteger(id) || id <= 0 ){
-            return res.status(400).json({error:'Valor de id incorrecto , debe ser un numero entero y positivo'})}
-
         if (Object.keys(req.body).length === 0){
             return res.status(400).json({error: 'el body no puede estar vacio'})}
 
@@ -68,8 +61,8 @@ const putAuthor = async(req,res,next) =>{
             if(!email || !email.trim()){
                 return res.status(400).json({error:'el email es obligatorio y no puede estar vacio'}) }}
 
-        const updateAuthor = await putServiceAuthor(id,name,email,bio)
-        if (!updateAuthor){return res.status(404).json({error:'Author no encontrado'})}
+        const updateAuthor = await putServiceAuthor(req.validatedId,name,email,bio)
+        if (!updateAuthor){return res.status(404).json({error:'Autor no encontrado'})}
         res.status(200).json(updateAuthor)
 
     } catch (error) {
@@ -82,13 +75,9 @@ const putAuthor = async(req,res,next) =>{
 
 const deleteAuthor = async(req,res,next) => {
     try {
-        const id = Number(req.params.id)
-        if(isNaN(id) || !Number.isInteger(id) || id <= 0 ){
-            return res.status(400).json({error:'Valor de id incorrecto , debe ser un numero entero y positivo'})}
-        
-        const deleteAuthor = await deleteServiceAuthor(id)
+        const deleteAuthor = await deleteServiceAuthor(req.validatedId)
         if (!deleteAuthor){
-            return res.status(404).json({error:'Author no encontrado'})}
+            return res.status(404).json({error:'Autor no encontrado'})}
         
         res.status(204).send()
 
