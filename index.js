@@ -18,5 +18,5 @@ app.use(errorHandler)
 
 
 app.listen(PORT, () => {
-    console.log("el servidor esta corriendo en el PORT" , PORT)
+    console.log("el servidor esta corriendo en el puerto:" , PORT)
 })
