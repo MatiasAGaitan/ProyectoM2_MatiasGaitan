@@ -1,4 +1,4 @@
-CREATE DATABASE miniBlog;
+CREATE DATABASE miniblog;
 
 CREATE TABLE authors (
     id SERIAL PRIMARY KEY,
