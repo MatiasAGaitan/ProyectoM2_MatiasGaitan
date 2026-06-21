@@ -27,8 +27,36 @@ const getServicePostAuthorId = async (id) => {
     return result.rows
 }
 
+const postServicePost = async (title,content,author_id,published) => {
+    const result = await pool.query(`
+        INSERT INTO posts (title, content, author_id, published) VALUES ($1,$2,$3,$4) RETURNING *`,[title,content,author_id,published])
+    return result.rows[0]
+}
+
+const putServicePost = async(title,content,author_id,published,id) => {
+    const result = await pool.query(`
+        UPDATE posts
+        SET
+            title = COALESCE($1, title),
+            content = COALESCE($2, content),
+            author_id = COALESCE($3, author_id),
+            published = COALESCE($4, published)
+        WHERE id = $5
+        RETURNING *
+        `,[title,content,author_id,published,id])
+    return result.rows[0]
+}
+
+const deleteServicePost = async(id) =>{
+    const result = await pool.query('DELETE FROM posts WHERE id = $1 RETURNING *',[id])
+    return result.rows[0]
+}
+
 module.exports = {
     getServicePosts,
     getServicePostId,
-    getServicePostAuthorId
+    getServicePostAuthorId,
+    postServicePost,
+    putServicePost,
+    deleteServicePost
 }

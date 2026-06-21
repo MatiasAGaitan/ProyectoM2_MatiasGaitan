@@ -5,7 +5,10 @@ const router = express.Router()
 const {
     getPost,
     getPostId,
-    getPostAuthorId
+    getPostAuthorId,
+    createPost,
+    putPost,
+    deletePost
 } = require('../Controllers/controllerPost')
 
 // importamos los middlewares
@@ -19,5 +22,8 @@ const {
 router.get('/', getPost)
 router.get('/author/:authorId',validateAuthorId, getPostAuthorId)
 router.get('/:id',validateId, getPostId)
+router.post('/',createPost)
+router.put('/:id',validateId,putPost)
+router.delete('/:id',validateId,deletePost)
 
 module.exports=router
