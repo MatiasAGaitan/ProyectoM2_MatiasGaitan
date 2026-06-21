@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-// importamos los controladores
+
 const {
     getAuthors,
     getAuthorId,
@@ -10,7 +10,7 @@ const {
     deleteAuthor
     } = require('../Controllers/controllerAuthors')
 
-// importamos los middlewares
+
 const {
     validateId
 } = require('../Middlewares/validators')

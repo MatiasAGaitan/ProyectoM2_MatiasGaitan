@@ -1,4 +1,4 @@
-// importamos los servicios
+
 const {
     getServicePosts,
     getServicePostId,
@@ -44,22 +44,29 @@ const getPostAuthorId = async(req,res,next) => {
 
 const createPost = async(req,res,next) => {
     try {
-        const {title,content,published} = req.body
+        const {title,content} = req.body
         if(!title || !title.trim()){
             return res.status(400).json({error:'el titulo no puede estar vacio'})}
+
         if(!content || !content.trim()){
             return res.status(400).json({error:'el contenido no puede estar vacio'})}
         
+        if(!req.body.author_id){
+            return res.status(400).json({error:'el author_id no puede estar vacio'})}
         const author_id = Number(req.body.author_id)
         if(isNaN(author_id) || !Number.isInteger(author_id) || author_id <= 0 ){
             return res.status(400).json({error:'Valor de author_id incorrecto , debe ser un numero entero y positivo'})}
+
+        // Verifica que author_id exista antes de crear el post.
         const author = await getServiceAuthorId(author_id)
         if(!author){ 
             return res.status(400).json({error: 'El author_id no existe'})}
-
+        
+        let {published} = req.body
         if(published !== undefined && typeof published !== 'boolean'){
             return res.status(400).json({error:'published debe ser true o false'})}
-            
+        if(published === undefined){published = false}
+                        
         const newPost = await postServicePost(title,content,author_id,published)
         res.status(201).json(newPost)
         
@@ -86,7 +93,9 @@ const putPost = async(req,res,next) => {
         if(req.body.author_id !== undefined){
             author_id = Number(req.body.author_id)
             if(isNaN(author_id) || !Number.isInteger(author_id) || author_id <= 0 ){
-                return res.status(400).json({error:'Valor de AuthorId incorrecto , debe ser un numero entero y positivo'})}
+                return res.status(400).json({error:'Valor de authorId incorrecto , debe ser un numero entero y positivo'})}
+
+            // Verifica que author_id exista antes de actualizar el post.
             const author = await getServiceAuthorId(author_id)
             if(!author){ 
                 return res.status(400).json({error: 'El author_id no existe'})}}
@@ -117,7 +126,7 @@ const deletePost = async(req,res,next) => {
         next(error)
     }
 }
-// exportamos los controladores
+
 module.exports = {
     getPost,
     getPostId,

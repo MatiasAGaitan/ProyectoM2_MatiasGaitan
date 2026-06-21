@@ -2,12 +2,13 @@ const pool = require('../db/config')
 
 const getServicePosts = async () => {
     const result = await pool.query('SELECT * FROM posts')
-    return result.rows
-}
+    return result.rows}
+
 const getServicePostId = async (id) => {
     const result = await pool.query('SELECT * FROM posts WHERE id = $1',[id])
-    return result.rows[0]
-}
+    return result.rows[0]}
+    
+// Devuelve posts junto con datos del author para GET /posts/author/:authorId.
 const getServicePostAuthorId = async (id) => {
     const result = await pool.query(
         `SELECT
