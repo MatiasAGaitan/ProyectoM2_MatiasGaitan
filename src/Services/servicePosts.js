@@ -8,7 +8,7 @@ const getServicePostId = async (id) => {
     const result = await pool.query('SELECT * FROM posts WHERE id = $1',[id])
     return result.rows[0]}
     
-// Devuelve posts junto con datos del author para GET /posts/author/:authorId.
+// Devuelve posts junto con datos del author para GET /posts/author/:author_id.
 const getServicePostAuthorId = async (id) => {
     const result = await pool.query(
         `SELECT

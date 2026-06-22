@@ -15,11 +15,11 @@ const {
 const {
     validateId,
     validateAuthorId
-} = require('../Middlewares/validators')
+} = require('../Middlewares/validateParams')
 
 
 router.get('/', getPost)
-router.get('/author/:authorId',validateAuthorId, getPostAuthorId)
+router.get('/author/:author_id',validateAuthorId, getPostAuthorId)
 router.get('/:id',validateId, getPostId)
 router.post('/',createPost)
 router.put('/:id',validateId,putPost)

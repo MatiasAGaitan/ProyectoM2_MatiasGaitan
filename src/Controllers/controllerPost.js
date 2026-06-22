@@ -8,6 +8,15 @@ const {
     deleteServicePost
 } = require('../Services/servicePosts')
 
+const{
+    validateExists,
+    validateTitle,
+    validateContent,
+    validateAuthorId,
+    validatePublished
+}=require('../Utils/validations')
+
+const {createError} = require('../Utils/createErrors')
 const {getServiceAuthorId} = require('../Services/serviceAuthors')
 
 const getPost = async (req,res,next) =>{
@@ -22,7 +31,11 @@ const getPostId = async(req,res,next) => {
     try {
         const post = await getServicePostId (req.validatedId)
 
-        if(!post){return res.status(404).json({error:'Post no encontrado'})}
+        const errorPostExists = validateExists(post,'Post no encontrado')
+        if(errorPostExists){
+            return next(errorPostExists)
+        }
+        
         res.status(200).json(post)
 
     } catch (error) {
@@ -34,7 +47,9 @@ const getPostAuthorId = async(req,res,next) => {
     try {
         const post = await getServicePostAuthorId (req.validatedAuthorId)
 
-        if (post.length === 0 ){return res.status(404).json({error:'Post no encontrado'})}
+        if (post.length === 0 ){
+            return next(createError('Post no encontrado',404))
+        }
         res.status(200).json(post)
 
     } catch (error) {
@@ -44,29 +59,41 @@ const getPostAuthorId = async(req,res,next) => {
 
 const createPost = async(req,res,next) => {
     try {
-        const {title,content} = req.body
-        if(!title || !title.trim()){
-            return res.status(400).json({error:'el titulo no puede estar vacio'})}
+        const {title,content,author_id} = req.body
 
-        if(!content || !content.trim()){
-            return res.status(400).json({error:'el contenido no puede estar vacio'})}
-        
-        if(!req.body.author_id){
-            return res.status(400).json({error:'el author_id no puede estar vacio'})}
-        const author_id = Number(req.body.author_id)
-        if(isNaN(author_id) || !Number.isInteger(author_id) || author_id <= 0 ){
-            return res.status(400).json({error:'Valor de author_id incorrecto , debe ser un numero entero y positivo'})}
+//errorTitle recibe como segundo parametro si es obligatorio true o no false el titulo
+        const errorTitle = validateTitle(title,true)
+        if(errorTitle){
+            return next(createError(errorTitle,400))
+        }
 
-        // Verifica que author_id exista antes de crear el post.
+//errorContent recibe como segundo parametro si es obligatorio true o no false el contenido
+        const errorContent = validateContent(content,true)
+        if(errorContent){
+            return next(createError(errorContent,400))
+        }
+
+//errorAuthorId recibe como segundo parametro si es obligatorio true o no false el author_id
+        const errorAuthorId = validateAuthorId(author_id,true)
+        if(errorAuthorId){
+            return next(createError(errorAuthorId,400))
+        }
+
+// Verifica que author_id exista antes de crear el post.
         const author = await getServiceAuthorId(author_id)
-        if(!author){ 
-            return res.status(400).json({error: 'El author_id no existe'})}
+        const errorAuthorExists = validateExists(author,'El author_id no existe')
+        if(errorAuthorExists){
+            return next(errorAuthorExists)
+        }
         
         let {published} = req.body
-        if(published !== undefined && typeof published !== 'boolean'){
-            return res.status(400).json({error:'published debe ser true o false'})}
-        if(published === undefined){published = false}
-                        
+        const errorPublished = validatePublished(published)
+        if(errorPublished){
+            return next(createError(errorPublished,400))
+        }
+        if(published === undefined){
+            published = false}
+
         const newPost = await postServicePost(title,content,author_id,published)
         res.status(201).json(newPost)
         
@@ -93,7 +120,7 @@ const putPost = async(req,res,next) => {
         if(req.body.author_id !== undefined){
             author_id = Number(req.body.author_id)
             if(isNaN(author_id) || !Number.isInteger(author_id) || author_id <= 0 ){
-                return res.status(400).json({error:'Valor de authorId incorrecto , debe ser un numero entero y positivo'})}
+                return res.status(400).json({error:'Valor de author_id incorrecto , debe ser un numero entero y positivo'})}
 
             // Verifica que author_id exista antes de actualizar el post.
             const author = await getServiceAuthorId(author_id)

@@ -1,4 +1,3 @@
-// importo los services de autores
 const {
     getServiceAuthors,
     getServiceAuthorId,
@@ -6,6 +5,14 @@ const {
     putServiceAuthor,
     deleteServiceAuthor
     } = require('../Services/serviceAuthors')
+
+const {
+    validateName,
+    validateEmail,
+    validateExists
+    } = require('../Utils/validations')
+
+const {createError} = require('../Utils/createErrors')
 
 const getAuthors = async (req,res,next) =>{
     try {
@@ -19,8 +26,13 @@ const getAuthors = async (req,res,next) =>{
 const getAuthorId = async(req,res,next) => {
     try { 
         const author = await getServiceAuthorId(req.validatedId)
-        if (!author){
-            return res.status(404).json({error:'Autor no encontrado'})}
+
+// errorExists recibe como segundo parametro el mensaje del error
+        const errorAuthorExists = validateExists(author,'Autor no encontrado')
+        if (errorAuthorExists){
+            return next(errorAuthorExists)
+        }
+
         res.status(200).json(author)
         
     } catch (error) {
@@ -31,54 +43,75 @@ const getAuthorId = async(req,res,next) => {
 const postAuthor = async(req,res,next) => {
     try {
         const {name,email,bio} = req.body
-        if (!name || !name.trim()){
-            return res.status(400).json({error:'el nombre es obligatorio y no puede estar vacio'})}
 
-        if(!email || !email.trim()){
-            return res.status(400).json({error:'el email es obligatorio y no puede estar vacio'})}
+// validateName recibe como segundo parametro si tiene que ser obligatorio true si no false
+        const errorName = validateName(name,true)
+        if (errorName){
+            return next(createError(errorName,400))
+        }
+
+// validateEmail recibe como segundo parametro si tiene que ser obligatorio true si no false
+        const errorEmail = validateEmail(email,true)
+        if(errorEmail){
+            return next(createError(errorEmail,400))
+        }
 
         const newAuthor = await postServiceAuthor(name,email,bio)
         res.status(201).json(newAuthor)
 
     } catch (error) {
         if(error.code === "23505"){
-            return res.status(409).json({error:'el email ya esta siendo utilizado'})}   
+            error.message = 'el email ya esta siendo utilizado'
+            error.status = 409 
+            return next(error)
+        }
         next(error)
     }
-
 }
 
 const putAuthor = async(req,res,next) =>{
     try {
         if (Object.keys(req.body).length === 0){
-            return res.status(400).json({error: 'el body no puede estar vacio'})}
+            return next(createError('El body no puede estar vacio',400))
+        }
 
         const {name,email,bio} = req.body
-        if (name !== undefined){
-            if (!name || !name.trim()){
-                return res.status(400).json({error:'el nombre es obligatorio y no puede estar vacio'})}}
 
-        if (email !== undefined){
-            if(!email || !email.trim()){
-                return res.status(400).json({error:'el email es obligatorio y no puede estar vacio'}) }}
+        const errorName = validateName(name,false)
+        if(errorName){
+            return next(createError(errorName,400))
+        }
+
+        const errorEmail = validateEmail(email,false)
+        if(errorEmail){
+            return next(createError(errorEmail,400))
+        }
 
         const updateAuthor = await putServiceAuthor(req.validatedId,name,email,bio)
-        if (!updateAuthor){return res.status(404).json({error:'Autor no encontrado'})}
+
+        const errorAuthorExists = validateExists(updateAuthor,'Autor no encontrado')
+        if(errorAuthorExists){
+            return next(errorAuthorExists)
+        }
+
         res.status(200).json(updateAuthor)
 
     } catch (error) {
         if(error.code === "23505"){
-            return res.status(409).json({error:'el email ya esta siendo utilizado'})}   
-
-        next(error)
-    }
+            error.message = 'el email ya esta siendo utilizado'
+            error.status = 409 
+            return next(error)
+        }
+        next(error)}
 }
+
 
 const deleteAuthor = async(req,res,next) => {
     try {
         const deleteAuthor = await deleteServiceAuthor(req.validatedId)
-        if (!deleteAuthor){
-            return res.status(404).json({error:'Autor no encontrado'})}
+        const errorAuthorExists = validateExists(deleteAuthor,'Autor no encontrado')
+        if (errorAuthorExists){
+            return next(errorAuthorExists)}
         
         res.status(204).send()
 

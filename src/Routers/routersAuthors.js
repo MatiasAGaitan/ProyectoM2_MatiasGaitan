@@ -13,7 +13,7 @@ const {
 
 const {
     validateId
-} = require('../Middlewares/validators')
+} = require('../Middlewares/validateParams')
 
 router.get('/', getAuthors )
 router.get('/:id', validateId , getAuthorId )
