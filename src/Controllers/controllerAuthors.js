@@ -44,13 +44,13 @@ const postAuthor = async(req,res,next) => {
     try {
         const {name,email,bio} = req.body
 
-// validateName recibe como segundo parametro si tiene que ser obligatorio true si no false
+// validateName recibe como segundo parametro si es obligatorio true de lo contrario false
         const errorName = validateName(name,true)
         if (errorName){
             return next(createError(errorName,400))
         }
 
-// validateEmail recibe como segundo parametro si tiene que ser obligatorio true si no false
+// validateEmail recibe como segundo parametro si es obligatorio true de lo contrario false
         const errorEmail = validateEmail(email,true)
         if(errorEmail){
             return next(createError(errorEmail,400))

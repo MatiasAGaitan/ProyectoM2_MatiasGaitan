@@ -27,7 +27,7 @@ const validateEmail = (email,required) => {
     if(!email){ return 'El email no puede estar vacio'}
     if(!email.trim()){ return 'El email no puede ser espacios vacios'}
 
-// Expresión regular simple para validar formato básico de email: texto@dominio.extensión
+// Expresion regular simple para validar formato basico de email: texto@dominio.extensión
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {return "El email debe tener un formato valido"}
 
@@ -49,6 +49,7 @@ const validateTitle = (title,required) => {
         }
         return null
     }
+    if(typeof title !== 'string'){ return 'El titulo debe ser un texto'}
     if(!title){return 'El titulo no puede estar vacio'}
     if(!title.trim()){return 'El titulo no puede ser espacios vacio'}
     if(title.trim().length < 3){return 'El titulo debe tener al menos 3 caracteres'}
@@ -63,6 +64,7 @@ const validateContent = (content,required) => {
         }
         return null
     }
+    if(typeof content !== 'string'){return 'El contenido debe ser texto'}
     if(!content){return 'El contenido no puede estar vacio'}
     if(!content.trim()){return 'El contenido no puede ser espacios vacio'}
     if(content.trim().length <10){return 'El contenido debe tener al menos 10 caracteres'}
@@ -89,6 +91,7 @@ const validatePublished = (published) => {
     
     return null
 }
+
 
 module.exports = {
     validateName,

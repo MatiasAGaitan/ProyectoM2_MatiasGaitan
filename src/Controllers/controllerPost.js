@@ -61,19 +61,27 @@ const createPost = async(req,res,next) => {
     try {
         const {title,content,author_id} = req.body
 
-//errorTitle recibe como segundo parametro si es obligatorio true o no false el titulo
+//errorTitle recibe como segundo parametro si es obligatorio true de lo contrario false 
         const errorTitle = validateTitle(title,true)
         if(errorTitle){
             return next(createError(errorTitle,400))
         }
 
-//errorContent recibe como segundo parametro si es obligatorio true o no false el contenido
+//errorContent recibe como segundo parametro si es obligatorio true de lo contrario false 
         const errorContent = validateContent(content,true)
         if(errorContent){
             return next(createError(errorContent,400))
         }
 
-//errorAuthorId recibe como segundo parametro si es obligatorio true o no false el author_id
+        let {published} = req.body
+        const errorPublished = validatePublished(published)
+        if(errorPublished){
+            return next(createError(errorPublished,400))
+        }
+        if(published === undefined){
+            published = false}
+
+//errorAuthorId recibe como segundo parametro si es obligatorio true de lo contrario false 
         const errorAuthorId = validateAuthorId(author_id,true)
         if(errorAuthorId){
             return next(createError(errorAuthorId,400))
@@ -85,14 +93,6 @@ const createPost = async(req,res,next) => {
         if(errorAuthorExists){
             return next(errorAuthorExists)
         }
-        
-        let {published} = req.body
-        const errorPublished = validatePublished(published)
-        if(errorPublished){
-            return next(createError(errorPublished,400))
-        }
-        if(published === undefined){
-            published = false}
 
         const newPost = await postServicePost(title,content,author_id,published)
         res.status(201).json(newPost)
@@ -105,34 +105,43 @@ const createPost = async(req,res,next) => {
 const putPost = async(req,res,next) => {
     try {
         if (Object.keys(req.body).length === 0){
-            return res.status(400).json({error: 'el body no puede estar vacio'})}
+            return next(createError('El body no puede estar vacio',400))}
 
-        const {title,content,published} = req.body
-        if(title !== undefined){
-            if(!title || !title.trim()){
-                return res.status(400).json({error:'el titulo no puede estar vacio'})}}
+        const {title,content,author_id,published} = req.body
 
-        if(content !== undefined){
-            if(!content || !content.trim()){
-                return res.status(400).json({error:'el contenido no puede estar vacio'})}}
+        const errorTitle = validateTitle(title,false)
+        if(errorTitle){
+            return next(createError(errorTitle,400))
+        }
+        
+        const errorContent = validateContent(content,false)
+        if(errorContent){
+            return next(createError(errorContent,400))
+        }
 
-        let author_id
-        if(req.body.author_id !== undefined){
-            author_id = Number(req.body.author_id)
-            if(isNaN(author_id) || !Number.isInteger(author_id) || author_id <= 0 ){
-                return res.status(400).json({error:'Valor de author_id incorrecto , debe ser un numero entero y positivo'})}
+        const errorPublished = validatePublished(published)
+        if(errorPublished){
+            return next(createError(errorPublished,400))
+        }
 
-            // Verifica que author_id exista antes de actualizar el post.
+        const errorAuthorId = validateAuthorId(author_id,false)
+        if(errorAuthorId){
+            return next(createError(errorAuthorId,400))
+        }
+
+// Verifica que author_id exista antes de actualizar el post.
+        if(author_id !== undefined){
             const author = await getServiceAuthorId(author_id)
-            if(!author){ 
-                return res.status(400).json({error: 'El author_id no existe'})}}
-
-        if(published !== undefined && typeof published !== 'boolean'){
-            return res.status(400).json({error:'published debe ser true o false'})}
+            const errorAuthorExists = validateExists(author,'El author_id no existe')
+            if(errorAuthorExists){
+                return next(errorAuthorExists)}
+            }
 
         const updatePost = await putServicePost(title,content,author_id,published,req.validatedId)
-        if (!updatePost){
-            return res.status(404).json({error:"el post no existe"})}
+        const errorPostExists = validateExists(updatePost,"El post que quiere actualizar no existe")
+        if (errorPostExists){
+            return next(errorPostExists)
+        }
 
         res.status(200).json(updatePost)
 
@@ -144,8 +153,11 @@ const putPost = async(req,res,next) => {
 const deletePost = async(req,res,next) => {
     try {
         const deletePost = await deleteServicePost(req.validatedId)
-        if(!deletePost){
-            return res.status(404).json({error:'el post no existe'})}
+
+        const errorPostExists = validateExists(deletePost,'El post que quiere eliminar no existe')
+        if(errorPostExists){
+            return next(errorPostExists)
+        }
 
         res.status(204).send()
 
