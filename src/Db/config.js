@@ -1,3 +1,6 @@
+const{loadEnvFile} = require('node:process')
+loadEnvFile('.env')
+
 const {Pool} = require('pg')
 
 const pool = new Pool({

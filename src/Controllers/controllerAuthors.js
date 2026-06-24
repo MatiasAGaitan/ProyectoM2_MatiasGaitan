@@ -61,7 +61,7 @@ const postAuthor = async(req,res,next) => {
 
     } catch (error) {
         if(error.code === "23505"){
-            error.message = 'el email ya esta siendo utilizado'
+            error.message = 'El email ya esta siendo utilizado'
             error.status = 409 
             return next(error)
         }

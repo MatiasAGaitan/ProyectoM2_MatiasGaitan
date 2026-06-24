@@ -10,7 +10,7 @@ const validateName = (name,required) => {
     }
     if (typeof name !== 'string'){ return 'El nombre debe ser texto'}
     if (!name){ return 'El nombre no puede estar vacio'}
-    if (!name.trim()){ return 'El nombre no puede ser espacios vacios '}
+    if (!name.trim()){ return 'El nombre no puede ser espacios vacios'}
 
     return null
 }
@@ -49,10 +49,10 @@ const validateTitle = (title,required) => {
         }
         return null
     }
-    if(typeof title !== 'string'){ return 'El titulo debe ser un texto'}
+    if(typeof title !== 'string'){ return 'El titulo debe ser texto'}
     if(!title){return 'El titulo no puede estar vacio'}
-    if(!title.trim()){return 'El titulo no puede ser espacios vacio'}
-    if(title.trim().length < 3){return 'El titulo debe tener al menos 3 caracteres'}
+    if(!title.trim()){return 'El titulo no puede ser espacios vacios'}
+    if(title.trim().length < 3){return 'El titulo debe tener por lo menos 3 caracteres'}
 
     return null
 }
@@ -66,8 +66,8 @@ const validateContent = (content,required) => {
     }
     if(typeof content !== 'string'){return 'El contenido debe ser texto'}
     if(!content){return 'El contenido no puede estar vacio'}
-    if(!content.trim()){return 'El contenido no puede ser espacios vacio'}
-    if(content.trim().length <10){return 'El contenido debe tener al menos 10 caracteres'}
+    if(!content.trim()){return 'El contenido no puede ser espacios vacios'}
+    if(content.trim().length <10){return 'El contenido debe tener por lo menos 10 caracteres'}
 
     return null
 }
@@ -79,7 +79,7 @@ const validateAuthorId = (author_id,required) => {
         }
         return null
     }
-    if(isNaN(author_id)){return 'El author_id debe ser un numero'}
+    if(typeof author_id !== 'number'){return 'El author_id debe ser un numero'}
     if(!Number.isInteger(author_id)){return 'El author_id debe ser un numero entero'}
     if (author_id <= 0 ){ return 'El author_id debe ser mayor a 0'}
 
@@ -87,7 +87,7 @@ const validateAuthorId = (author_id,required) => {
 }
 
 const validatePublished = (published) => {
-    if(published !== undefined && typeof published !== 'boolean'){return 'published debe ser true o false'}
+    if(published !== undefined && typeof published !== 'boolean'){return 'published debe ser true o false (boolean)'}
     
     return null
 }
