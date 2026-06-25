@@ -13,8 +13,8 @@ CREATE TABLE posts (
     title VARCHAR(200) NOT NULL,
     content TEXT NOT NULL,
     author_id INTEGER NOT NULL,
-    published BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
+    published BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE -- Si se elimina un author, tambien se eliminan sus posts asociados.
 
 );

@@ -13,13 +13,26 @@ describe('GET /authors', () => {
 
 describe('GET /authors/:id', () => {
     test('muestra el autor por id', async () => {
+        // preparo el entorno para actualizar un usuario
+        const email = `example_${Date.now()}@example.com`
+        const exampleAuthor = await request(app)
+            .post('/authors')
+            .send({
+                name: "Example",
+                email: email,
+                bio:"biografia de ejemplo"
+            })
+
         const response = await request(app)
-            .get('/authors/1')
+            .get(`/authors/${exampleAuthor.body.id}`)
 
         expect(response.statusCode).toBe(200)
         expect(response.body).toHaveProperty('id')
         expect(response.body).toHaveProperty('name')
         expect(response.body).toHaveProperty('email')
+
+        // limpio el entorno 
+        await request(app).delete(`/authors/${exampleAuthor.body.id}`)
     })
 
     test('rechaza al pasar id no valido', async () => {
