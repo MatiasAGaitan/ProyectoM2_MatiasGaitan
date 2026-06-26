@@ -35,12 +35,28 @@ describe('GET /authors/:id', () => {
         await request(app).delete(`/authors/${exampleAuthor.body.id}`)
     })
 
-    test('rechaza al pasar id no valido', async () => {
+    test('rechaza al pasar id no valido (String)', async () => {
         const response = await request(app)
             .get('/authors/abc')
 
         expect(response.statusCode).toBe(400)
         expect(response.body.error).toBe("El id debe ser un numero")
+    })
+
+    test('rechaza al pasar id no valido(Decimal)', async () => {
+        const response = await request(app)
+            .get('/authors/1.5')
+
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe("El id debe ser un numero entero")
+    })
+
+    test('rechaza al pasar id no valido(Negativo)', async () => {
+        const response = await request(app)
+            .get('/authors/-1')
+
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe("El id debe ser mayor a 0")
     })
 
     test('rechaza al no encontrar el autor', async () => {

@@ -65,12 +65,20 @@ describe('GET /posts/:id', () => {
         await request(app).delete(`/authors/${exampleAuthor.body.id}`)     
     })
 
-    test('rechaza al pasar id invalido', async () => {
+    test('rechaza al pasar id invalido (string)', async () => {
         const response = await request(app)
             .get('/posts/abc')
         
         expect(response.statusCode).toBe(400)
         expect(response.body.error).toBe('El id debe ser un numero')
+    })
+
+    test('rechaza al pasar id invalido (decimal)', async () => {
+        const response = await request(app)
+            .get('/posts/1.5')
+        
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe('El id debe ser un numero entero')
     })
 
     test('rechaza al no encontrar el post', async () => {
@@ -255,6 +263,162 @@ describe('PUT /posts/:id', () => {
         // Limpio el entorno
         await request(app).delete(`/authors/${exampleAuthor.body.id}`)     
     })
+
+    test('rechaza al pasar un titulo invalido', async () => {
+        // preparo el entorno para tener un post correcto y actualizarlo
+        const email = `example_${Date.now()}@example.com`
+        const exampleAuthor = await request(app)
+            .post('/authors')
+            .send({
+                name: "Example",
+                email: email,
+            })
+        
+        const examplePost = await request(app)
+            .post('/posts')
+            .send({
+                title: "Example",
+                content: "Content of Example",
+                author_id: exampleAuthor.body.id
+            })
+
+        const response = await request(app)
+            .put(`/posts/${examplePost.body.id}`)
+            .send({
+                title: " "
+            })
+
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe('El titulo no puede ser espacios vacios')
+
+        // Limpio el entorno
+        await request(app).delete(`/authors/${exampleAuthor.body.id}`)     
+    })
+
+    test('rechaza al pasar un contenido invalido', async () => {
+        // preparo el entorno para tener un post correcto y actualizarlo
+        const email = `example_${Date.now()}@example.com`
+        const exampleAuthor = await request(app)
+            .post('/authors')
+            .send({
+                name: "Example",
+                email: email,
+            })
+        
+        const examplePost = await request(app)
+            .post('/posts')
+            .send({
+                title: "Example",
+                content: "Content of Example",
+                author_id: exampleAuthor.body.id
+            })
+
+        const response = await request(app)
+            .put(`/posts/${examplePost.body.id}`)
+            .send({
+                content: " "
+            })
+
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe('El contenido no puede ser espacios vacios')
+
+        // Limpio el entorno
+        await request(app).delete(`/authors/${exampleAuthor.body.id}`)     
+    })
+    
+    test('rechaza al pasar un published invalido', async () => {
+        // preparo el entorno para tener un post correcto y actualizarlo
+        const email = `example_${Date.now()}@example.com`
+        const exampleAuthor = await request(app)
+            .post('/authors')
+            .send({
+                name: "Example",
+                email: email,
+            })
+        
+        const examplePost = await request(app)
+            .post('/posts')
+            .send({
+                title: "Example",
+                content: "Content of Example",
+                author_id: exampleAuthor.body.id
+            })
+
+        const response = await request(app)
+            .put(`/posts/${examplePost.body.id}`)
+            .send({
+                published: "true"
+            })
+
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe('published debe ser true o false (boolean)')
+
+        // Limpio el entorno
+        await request(app).delete(`/authors/${exampleAuthor.body.id}`)     
+    })
+
+    test('rechaza al pasar un author_id invalido', async () => {
+        // preparo el entorno para tener un post correcto y actualizarlo
+        const email = `example_${Date.now()}@example.com`
+        const exampleAuthor = await request(app)
+            .post('/authors')
+            .send({
+                name: "Example",
+                email: email,
+            })
+        
+        const examplePost = await request(app)
+            .post('/posts')
+            .send({
+                title: "Example",
+                content: "Content of Example",
+                author_id: exampleAuthor.body.id
+            })
+
+        const response = await request(app)
+            .put(`/posts/${examplePost.body.id}`)
+            .send({
+                author_id: "abc"
+            })
+
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe('El author_id debe ser un numero')
+
+        // Limpio el entorno
+        await request(app).delete(`/authors/${exampleAuthor.body.id}`)     
+    })
+
+    test('rechaza al pasar un author_id inexistente', async () => {
+        // preparo el entorno para tener un post correcto y actualizarlo
+        const email = `example_${Date.now()}@example.com`
+        const exampleAuthor = await request(app)
+            .post('/authors')
+            .send({
+                name: "Example",
+                email: email,
+            })
+        
+        const examplePost = await request(app)
+            .post('/posts')
+            .send({
+                title: "Example",
+                content: "Content of Example",
+                author_id: exampleAuthor.body.id
+            })
+
+        const response = await request(app)
+            .put(`/posts/${examplePost.body.id}`)
+            .send({
+                author_id: 999
+            })
+
+        expect(response.statusCode).toBe(404)
+        expect(response.body.error).toBe('El author_id no existe')
+
+        // Limpio el entorno
+        await request(app).delete(`/authors/${exampleAuthor.body.id}`)     
+    })
+
 })
 
 describe('DELETE /posts/:id', () => {
