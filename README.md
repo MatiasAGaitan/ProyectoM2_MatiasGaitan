@@ -10,6 +10,7 @@
 - [Ejemplos De Uso](#-ejemplos-de-uso)
 - [Documentacion Completa](#-documentacion-completa)
 - [Ejecutar Localmente](#-ejecutar-localmente)
+- [Deployment En Railway Desde Cero](#-deployment-en-railway-desde-cero)
 - [Tests](#-tests)
 - [Notas](#-notas)
 
@@ -216,25 +217,26 @@ Desde Swagger UI se puede:
 
 - Node.js 20 o superior
 - PostgreSQL instalado o una base PostgreSQL disponible
+- npm instalado
 
 ### 🧭 Pasos
 
-1. Clonar el repositorio:
+#### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/MatiasAGaitan/ProyectoM2_MatiasGaitan.git
-cd "Proyecto Final"
+cd ProyectoM2_MatiasGaitan
 ```
 
-2. Instalar dependencias:
+#### 2. Instalar dependencias
 
 ```bash
 npm install
 ```
 
-3. Configurar variables de entorno:
+#### 3. Configurar variables de entorno
 
-Crear un archivo `.env` en la raiz del proyecto:
+Crear un archivo `.env` en la raíz del proyecto:
 
 ```env
 DB_HOST=localhost
@@ -245,7 +247,9 @@ DB_PASSWORD=tu_password
 PORT=3000
 ```
 
-4. Configurar la base de datos:
+#### 4. Configurar la base de datos
+
+Entrar a PostgreSQL:
 
 ```bash
 psql -U postgres
@@ -258,25 +262,200 @@ CREATE DATABASE miniblog;
 \c miniblog
 ```
 
-Luego ejecutar las tablas de `src/db/setup.sql` y, si se quieren datos iniciales, los inserts de `src/db/seed.sql`.
+Luego ejecutar las tablas:
 
-5. Iniciar el servidor en desarrollo:
+```bash
+psql -U postgres -d miniblog -f src/db/setup.sql
+```
+
+Opcionalmente, cargar datos iniciales:
+
+```bash
+psql -U postgres -d miniblog -f src/db/seed.sql
+```
+
+#### 5. Iniciar el servidor en desarrollo
 
 ```bash
 npm run dev
 ```
 
-La API estara disponible en:
+La API estará disponible en:
 
-```txt
+```text
 http://localhost:3000
 ```
 
-La documentacion local estara disponible en:
+La documentación Swagger estará disponible en:
 
-```txt
+```text
 http://localhost:3000/api-docs
 ```
+
+---
+
+## 🚂 Deployment en Railway
+
+Guia para desplegar la API en Railway usando PostgreSQL.
+
+### 🗄️ 1. Crear la base de datos PostgreSQL en Railway
+
+1. Entrar a Railway.
+2. Crear un nuevo proyecto.
+3. Agregar un servicio de PostgreSQL.
+4. Entrar al servicio PostgreSQL.
+5. Copiar la `DATABASE_URL` para usarla en el backend desplegado.
+6. Copiar los datos de conexión pública si se quiere conectar desde la computadora local:
+
+   - Host
+   - Port
+   - Database
+   - User
+   - Password
+
+### 🔌 2. Conectar la base de datos de Railway con el proyecto local
+
+Para correr la API desde la computadora local usando la base de datos de Railway, usar los datos de conexión pública del servicio PostgreSQL.
+
+Crear un archivo `.env` en la raíz del proyecto:
+
+```env
+DB_HOST=HOST_PUBLICO_DE_RAILWAY
+DB_PORT=PUERTO_PUBLICO_DE_RAILWAY
+DB_NAME=NOMBRE_DE_LA_BASE
+DB_USER=USUARIO_DE_POSTGRES
+DB_PASSWORD=PASSWORD_DE_POSTGRES
+PORT=3000
+```
+
+Ejemplo:
+
+```env
+DB_HOST=reseau.proxy.rlwy.net
+DB_PORT=11764
+DB_NAME=railway
+DB_USER=postgres
+DB_PASSWORD=tu_password_de_railway
+PORT=3000
+```
+
+> ⚠️ Atención: no usar `postgres.railway.internal` para correr la app desde la computadora local. Esa URL solo funciona dentro de Railway.
+
+### 🧱 3. Configurar la base de datos
+
+Crear las tablas ejecutando:
+
+```bash
+psql -h HOST_PUBLICO_DE_RAILWAY -p PUERTO_PUBLICO_DE_RAILWAY -U USUARIO_DE_POSTGRES -d NOMBRE_DE_LA_BASE -f src/db/setup.sql
+```
+
+Opcionalmente, cargar datos iniciales:
+
+```bash
+psql -h HOST_PUBLICO_DE_RAILWAY -p PUERTO_PUBLICO_DE_RAILWAY -U USUARIO_DE_POSTGRES -d NOMBRE_DE_LA_BASE -f src/db/seed.sql
+```
+
+### 📤 4. Subir el proyecto a GitHub
+
+1. Crear un repositorio en GitHub.
+2. Subir el proyecto completo.
+3. Verificar que `.env` no se suba al repositorio.
+4. Verificar que `node_modules` no se suba al repositorio.
+
+### 🖥️ 5. Crear el servicio backend en Railway
+
+1. Entrar al proyecto de Railway.
+2. Agregar un nuevo servicio desde GitHub.
+3. Seleccionar el repositorio del proyecto.
+4. Esperar a que Railway detecte la app Node.js.
+5. Verificar que el script de inicio sea:
+
+```json
+"start": "node index.js"
+```
+
+### 🔐 6. Configurar variables de entorno en Railway
+
+En el servicio backend de Railway, agregar las variables necesarias para producción.
+
+Si el proyecto usa `DATABASE_URL`, agregar:
+
+```env
+NODE_ENV=production
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE
+```
+
+Si el proyecto usa variables separadas, agregar:
+
+```env
+NODE_ENV=production
+DB_HOST=HOST_DE_RAILWAY
+DB_PORT=PORT_DE_RAILWAY
+DB_NAME=NOMBRE_DE_LA_BASE
+DB_USER=USUARIO_DE_POSTGRES
+DB_PASSWORD=PASSWORD_DE_POSTGRES
+PORT=3000
+```
+
+> ⚠️ Atención: usar la URL o los datos de conexión generados por Railway.
+
+### 🌐 7. Internal URL y Public URL
+
+Railway puede mostrar dos tipos de URL relacionadas al proyecto.
+
+#### Internal URL
+
+La internal URL puede verse parecida a:
+
+```text
+postgres.railway.internal
+```
+
+Esta URL es interna de Railway. Sirve para que el backend desplegado en Railway se conecte con PostgreSQL dentro de Railway.
+
+> ⚠️ Atención: esta URL no funciona desde la computadora local.
+
+#### Public URL
+
+La public URL es la URL que se usa para acceder a la API desde el navegador, Postman, Swagger o curl.
+
+Ejemplo:
+
+```text
+https://proyectom2matiasgaitan-production.up.railway.app
+```
+
+Ejemplo con curl:
+
+```bash
+curl https://proyectom2matiasgaitan-production.up.railway.app/authors
+```
+
+### 🚀 8. Ejecutar el deploy
+
+1. Ir al servicio backend en Railway.
+2. Ejecutar el deploy.
+3. Esperar a que el build termine correctamente.
+4. Abrir la public URL generada por Railway.
+
+### ✅ 9. Probar el deploy
+
+Probar los endpoints principales:
+
+```text
+https://proyectom2matiasgaitan-production.up.railway.app/authors
+https://proyectom2matiasgaitan-production.up.railway.app/posts
+https://proyectom2matiasgaitan-production.up.railway.app/api-docs
+```
+
+En Swagger, seleccionar la URL correcta según dónde se esté probando:
+
+```text
+http://localhost:3000
+https://proyectom2matiasgaitan-production.up.railway.app
+```
+
+Usar `localhost` para pruebas locales y la URL pública de Railway para probar el deploy.
 
 ## 🧪 Tests
 
