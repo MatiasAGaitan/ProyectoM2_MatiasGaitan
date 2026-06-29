@@ -9,3 +9,10 @@ INSERT INTO posts (title, content, author_id, published) VALUES
     ('APIs RESTful', 'REST es un estilo arquitectónico...', 1, true),
     ('Manejo de errores en Express', 'El manejo apropiado de errores...', 3, false),
     ('Async/Await explicado', 'Las promesas simplifican el código asíncrono...', 1, false);
+
+INSERT INTO comments (comment_content, author_id, post_id) VALUES
+('Muy buen post, me ayudó a entender mejor el tema.', 1, 1),
+('Estoy de acuerdo con lo que planteas en este artículo.', 2, 1),
+('Excelente explicación, bastante clara y directa.', 1, 2),
+('Me gustaría ver una segunda parte sobre este tema.', 3, 2),
+('Buen contenido, gracias por compartirlo.', 2, 3);

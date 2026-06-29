@@ -3,6 +3,7 @@ const app = express()
 
 const routersAuthors = require('./Routers/routersAuthors')
 const routersPosts = require('./Routers/routersPosts')
+const routersComments = require('./Routers/routersComments')
 
 const errorHandler = require('./Middlewares/errorHandlers')
 
@@ -16,6 +17,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use('/authors',routersAuthors)
 app.use('/posts',routersPosts)
+app.use('/comments',routersComments)
 
 app.use((req,res,next) => {
     const error = new Error(`Ruta ${req.originalUrl} no encontrada`)

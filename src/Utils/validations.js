@@ -92,6 +92,34 @@ const validatePublished = (published) => {
     return null
 }
 
+const validateCommentContent = (comment_content,required) => {
+    if(comment_content === undefined){
+        if(required){
+            return 'El comment_content es obligatorio'
+        }
+        return null
+    }
+    if(typeof comment_content !== 'string'){return 'El comment_content debe ser un texto'}
+    if(!comment_content){return 'El comment_content no puede estar vacio'}
+    if(!comment_content.trim()){return 'El comment_content no puede ser espacios vacios'}
+    if(comment_content.trim().length <10){return 'El contenido debe tener por lo menos 10 caracteres'}
+    
+    return null
+}
+
+const validatePostId = (post_id,required) => {
+    if(post_id === undefined){
+        if(required){
+            return 'El post_id es obligatorio'
+        }
+        return null
+    }
+    if(typeof post_id !== 'number'){return 'El post_id debe ser un numero'}
+    if(!Number.isInteger(post_id)){return 'El post_id debe ser un numero entero'}
+    if (post_id <= 0 ){ return 'El post_id debe ser mayor a 0'}
+
+    return null
+}
 
 module.exports = {
     validateName,
@@ -100,5 +128,7 @@ module.exports = {
     validateTitle,
     validateContent,
     validateAuthorId,
-    validatePublished
+    validatePublished,
+    validateCommentContent,
+    validatePostId
 }
