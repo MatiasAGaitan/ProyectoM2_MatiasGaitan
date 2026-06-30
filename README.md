@@ -24,7 +24,7 @@ Proyecto construido con Node.js, Express, PostgreSQL y `pg`. Desplegado en Railw
 
 [https://proyectom2matiasgaitan-production.up.railway.app](https://proyectom2matiasgaitan-production.up.railway.app)
 
-Las rutas principales son `/authors` y `/posts`.
+Las rutas principales son `/authors` , `/posts` y `/comments`.
 
 ## 🛠️ Tecnologias
 
@@ -270,7 +270,8 @@ Desde Swagger UI se puede:
 - Probar endpoints desde el navegador
 - Consultar los schemas de autores, posts, comments y errores
 
-![Swagger UI](./screenshots/swagger_docs.png)
+![Swagger UI 1](./screenshots/swagger_docs.png)
+![Swagger UI 2](./screenshots/swagger_docs_schemas.png)
 
 ## 💻 Ejecutar Localmente
 
