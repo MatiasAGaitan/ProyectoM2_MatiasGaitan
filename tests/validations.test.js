@@ -5,7 +5,9 @@ const{
     validateTitle,
     validateContent,
     validateAuthorId,
-    validatePublished
+    validatePublished,
+    validateCommentContent,
+    validatePostId
 } = require('../src/Utils/validations')
 
 describe('validateName', () => {
@@ -185,4 +187,52 @@ describe('validatePublished', () => {
         expect(validatePublished("true")).toBe('published debe ser true o false (boolean)')
     })
 
+})
+
+describe('validateCommentContent', () => {
+    test('acepta el comment_content', () => {
+        expect(validateCommentContent('esto es un comentario de ejemplo',true)).toBe(null)
+    })
+
+    test('da error cuando no se envia comment_content y es obligatorio', () => {
+        expect(validateCommentContent(undefined,true)).toBe('El comment_content es obligatorio')
+    })
+
+    test('rechaza comment_content cuando no es texto', () => {
+        expect(validateCommentContent(1234,true)).toBe('El comment_content debe ser un texto')
+    })
+
+    test('rechaza comment_content cuando esta vacio', () => {
+        expect(validateCommentContent("",true)).toBe('El comment_content no puede estar vacio')
+    })    
+
+    test('rechaza comment_content cuando solo son espacios vacios', () => {
+        expect(validateCommentContent(" ",true)).toBe('El comment_content no puede ser espacios vacios')
+    })  
+
+    test('rechaza comment_content cuando tiene menos de 10 caracteres', () => {
+        expect(validateCommentContent("abc",true)).toBe('El comment_content debe tener por lo menos 10 caracteres')
+    })  
+})
+
+describe('validatePostId', () => {
+    test('acepta el post_id', () => {
+        expect(validatePostId(1,true)).toBe(null)
+    })
+
+    test('da error cuando no se envia el post_id y es obligatorio', () => {
+        expect(validatePostId(undefined,true)).toBe('El post_id es obligatorio')
+    })
+
+    test('rechaza post_id cuando no es un numero', () => {
+        expect(validatePostId('abc',true)).toBe('El post_id debe ser un numero')
+    })
+
+    test('rechaza post_id cuando no es un numero entero', () => {
+        expect(validatePostId(1.5,true)).toBe('El post_id debe ser un numero entero')
+    })
+
+    test('rechaza post_id cuando no es un numero mayor a 0', () => {
+        expect(validatePostId(-5,true)).toBe('El post_id debe ser mayor a 0')
+    })
 })

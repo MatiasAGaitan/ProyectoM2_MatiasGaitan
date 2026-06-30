@@ -13,26 +13,13 @@ describe('GET /authors', () => {
 
 describe('GET /authors/:id', () => {
     test('muestra el autor por id', async () => {
-        // preparo el entorno para actualizar un usuario
-        const email = `example_${Date.now()}@example.com`
-        const exampleAuthor = await request(app)
-            .post('/authors')
-            .send({
-                name: "Example",
-                email: email,
-                bio:"biografia de ejemplo"
-            })
-
         const response = await request(app)
-            .get(`/authors/${exampleAuthor.body.id}`)
+            .get(`/authors/1`)
 
         expect(response.statusCode).toBe(200)
         expect(response.body).toHaveProperty('id')
         expect(response.body).toHaveProperty('name')
         expect(response.body).toHaveProperty('email')
-
-        // limpio el entorno 
-        await request(app).delete(`/authors/${exampleAuthor.body.id}`)
     })
 
     test('rechaza al pasar id no valido (String)', async () => {
@@ -86,8 +73,7 @@ describe('POST /authors', () => {
         expect(response.body.bio).toBe('Example bio')
 
         // elimino autor creado para que el test se pueda repetir
-        await request(app)
-            .delete(`/authors/${response.body.id}`)
+        await request(app).delete(`/authors/${response.body.id}`)
     })
 
     test('rechaza al NO pasar name', async () => {
@@ -114,7 +100,7 @@ describe('POST /authors', () => {
         expect(response.body.error).toBe('El email es obligatorio')
     })
 
-        test('rechaza al pasar email invalido', async () => {
+    test('rechaza al pasar email invalido', async () => {
         const response = await request(app)
             .post('/authors')
             .send({
@@ -127,7 +113,7 @@ describe('POST /authors', () => {
         expect(response.body.error).toBe('El email debe tener un formato valido')
     })
 
-        test('rechaza al pasar email ya existente', async () => {
+    test('rechaza al pasar email ya existente', async () => {
         // preparo el entorno para provocar el 409
         const email = `example_${Date.now()}@example.com`
         const exampleAuthor = await request(app)
@@ -181,26 +167,13 @@ describe('PUT /authors/:id', () => {
     })
 
     test('rechaza al pasarle un body vacio', async () => {
-        // preparo el entorno para actualizar un autor
-        const email = `example_${Date.now()}@example.com`
-        const exampleAuthor = await request(app)
-            .post('/authors')
-            .send({
-                name: "Example",
-                email: email,
-                bio:"biografia de ejemplo"
-            })
-        
         const response = await request(app)
-            .put(`/authors/${exampleAuthor.body.id}`)
+            .put(`/authors/1`)
             .send({
             })
 
         expect(response.statusCode).toBe(400)
         expect(response.body.error).toBe('El body no puede estar vacio')
-
-        // limpio el entorno 
-        await request(app).delete(`/authors/${exampleAuthor.body.id}`)
     })
 })
 

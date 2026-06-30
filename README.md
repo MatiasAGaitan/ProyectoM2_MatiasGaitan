@@ -53,13 +53,16 @@ El proyecto esta organizado separando responsabilidades para mantener el codigo 
 │   ├── 📄 app.js
 │   ├── 📁 Controllers
 │   │   ├── 📄 controllerAuthors.js
-│   │   └── 📄 controllerPost.js
+│   │   ├── 📄 controllerPost.js
+│   │   └── 📄 controllerComments.js
 │   ├── 📁 Routers
 │   │   ├── 📄 routersAuthors.js
-│   │   └── 📄 routersPosts.js
+│   │   ├── 📄 routersPosts.js
+│   │   └── 📄 routersComments.js
 │   ├── 📁 Services
 │   │   ├── 📄 serviceAuthors.js
-│   │   └── 📄 servicePosts.js
+│   │   ├── 📄 servicePosts.js
+│   │   └── 📄 serviceComments.js
 │   ├── 📁 Middlewares
 │   │   ├── 📄 errorHandlers.js
 │   │   └── 📄 validateParams.js
@@ -73,6 +76,7 @@ El proyecto esta organizado separando responsabilidades para mantener el codigo 
 ├── 📁 tests
 │   ├── 📄 authors.test.js
 │   ├── 📄 posts.test.js
+│   ├── 📄 comments.test.js
 │   └── 📄 validations.test.js
 └── 📁 screenshots
     └── 🖼️ capturas para el README
@@ -97,6 +101,14 @@ El proyecto esta organizado separando responsabilidades para mantener el codigo 
 - `POST /posts` - Crear un nuevo post
 - `PUT /posts/:id` - Actualizar un post existente
 - `DELETE /posts/:id` - Eliminar un post
+
+### 💬 Comments
+
+- `GET /comments` - Obtener todos los comentarios
+- `GET /comments/:id` - Obtener un comentario especifico
+- `POST /comments` - Crear un nuevo comentario
+- `PUT /comments/:id` - Actualizar un comentario existente
+- `DELETE /comments/:id` - Eliminar un comentario
 
 ## 🧪 Ejemplos De Uso
 
@@ -196,6 +208,55 @@ curl https://proyectom2matiasgaitan-production.up.railway.app/posts/author/1
 
 ![Respuesta GET posts/author/author_id](./screenshots/get_posts_author.png)
 
+### 💬 Obtener todos los comentarios
+
+```bash
+curl https://proyectom2matiasgaitan-production.up.railway.app/comments
+```
+
+**Respuesta ejemplo:**
+
+![Respuesta GET comments](./screenshots/get_comments.png)
+
+### ➕ Crear un comentario
+
+```bash
+curl -X POST https://proyectom2matiasgaitan-production.up.railway.app/comments \
+  -H "Content-Type: application/json" \
+  -d '{
+    "comment_content": "Comentario de ejemplo para el post",
+    "author_id": 1,
+    "post_id": 1
+  }'
+```
+
+**Respuesta ejemplo:**
+
+![Respuesta POST comments](./screenshots/post_comments.png)
+
+### ✏️ Actualizar un comentario
+
+```bash
+curl -X PUT https://proyectom2matiasgaitan-production.up.railway.app/comments/6 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "comment_content": "Comentario actualizado"
+  }'
+```
+
+**Respuesta ejemplo:**
+
+![Respuesta PUT comments](./screenshots/put_comments.png)
+
+### 🗑️ Eliminar un comentario
+
+```bash
+curl -X DELETE https://proyectom2matiasgaitan-production.up.railway.app/comments/6
+```
+
+**Respuesta:** `204 No Content`
+
+
 ## 📘 Documentacion Completa
 
 La documentacion interactiva de la API esta disponible en:
@@ -207,7 +268,7 @@ Desde Swagger UI se puede:
 - Ver todos los endpoints disponibles
 - Revisar parametros, request body y respuestas
 - Probar endpoints desde el navegador
-- Consultar los schemas de autores, posts y errores
+- Consultar los schemas de autores, posts, comments y errores
 
 ![Swagger UI](./screenshots/swagger_docs.png)
 
@@ -445,6 +506,7 @@ Probar los endpoints principales:
 ```text
 https://proyectom2matiasgaitan-production.up.railway.app/authors
 https://proyectom2matiasgaitan-production.up.railway.app/posts
+https://proyectom2matiasgaitan-production.up.railway.app/comments
 https://proyectom2matiasgaitan-production.up.railway.app/api-docs
 ```
 
@@ -475,3 +537,5 @@ npm run test:coverage
 
 - El archivo `.env.example` sirve como referencia para las variables necesarias.
 - Si se elimina un autor, sus posts asociados se eliminan por la relacion con `ON DELETE CASCADE`.
+- Los comentarios estan asociados a un autor y a un post mediante `author_id` y `post_id`.
+- Si se elimina un autor o un post, sus comentarios asociados se eliminan por la relacion con `ON DELETE CASCADE`.

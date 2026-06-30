@@ -15,6 +15,8 @@ tags:
     description: Operaciones sobre autores
   - name: Posts
     description: Operaciones sobre posts
+  - name: Comments
+    description: Operaciones sobre comentarios
 
 paths:
   /authors:
@@ -268,6 +270,114 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
+  /comments:
+    get:
+      summary: Listar comentarios
+      tags:
+        - Comments
+      responses:
+        '200':
+          description: Lista de comentarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Crear comentario
+      tags:
+        - Comments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentInput'
+      responses:
+        '201':
+          description: Comentario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: Author o post asociado no existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /comments/{id}:
+    get:
+      summary: Obtener comentario por ID
+      tags:
+        - Comments
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Comentario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    put:
+      summary: Actualizar comentario
+      tags:
+        - Comments
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentUpdate'
+      responses:
+        '200':
+          description: Comentario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      summary: Eliminar comentario
+      tags:
+        - Comments
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '204':
+          description: Comentario eliminado
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
 components:
   parameters:
     IdParam:
@@ -411,6 +521,45 @@ components:
         author_bio:
           type: string
           nullable: true
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        comment_content:
+          type: string
+        author_id:
+          type: integer
+        post_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    CommentInput:
+      type: object
+      required:
+        - comment_content
+        - author_id
+        - post_id
+      properties:
+        comment_content:
+          type: string
+        author_id:
+          type: integer
+        post_id:
+          type: integer
+
+    CommentUpdate:
+      type: object
+      properties:
+        comment_content:
+          type: string
+        author_id:
+          type: integer
+        post_id:
+          type: integer
 
     Error:
       type: object

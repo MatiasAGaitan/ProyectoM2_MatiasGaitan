@@ -102,7 +102,7 @@ const validateCommentContent = (comment_content,required) => {
     if(typeof comment_content !== 'string'){return 'El comment_content debe ser un texto'}
     if(!comment_content){return 'El comment_content no puede estar vacio'}
     if(!comment_content.trim()){return 'El comment_content no puede ser espacios vacios'}
-    if(comment_content.trim().length <10){return 'El contenido debe tener por lo menos 10 caracteres'}
+    if(comment_content.trim().length <10){return 'El comment_content debe tener por lo menos 10 caracteres'}
     
     return null
 }
