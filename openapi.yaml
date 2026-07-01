@@ -2,7 +2,7 @@ openapi: 3.1.1
 info:
   title: MiniBlog API
   version: 1.0.0
-  description: API REST para gestionar autores y posts con Node.js, Express y PostgreSQL.
+  description: API REST para gestionar autores , posts y comments con Node.js, Express y PostgreSQL.
 
 servers:
   - url: http://localhost:3000

@@ -10,19 +10,20 @@
 - [Ejemplos De Uso](#-ejemplos-de-uso)
 - [Documentacion Completa](#-documentacion-completa)
 - [Ejecutar Localmente](#-ejecutar-localmente)
-- [Deployment En Railway Desde Cero](#-deployment-en-railway-desde-cero)
+- [Deployment En Railway](#-deployment-en-railway)
 - [Tests](#-tests)
+- [Documentacion-de-uso-de-IA](#-documentacion-de-uso-de-ia)
 - [Notas](#-notas)
 
 ## 📖 Descripcion
 
-API REST para gestionar autores y posts de un blog. Permite operaciones CRUD completas sobre autores y publicaciones, usando una relacion donde un autor puede tener muchos posts.
+API REST para gestionar autores, posts y comentarios de un blog. Permite operaciones CRUD completas sobre autores y publicaciones, usando una relacion donde un autor puede tener muchos posts.
 
 Proyecto construido con Node.js, Express, PostgreSQL y `pg`. Desplegado en Railway.
 
 ## 🌐 URL Base
 
-[https://proyectom2matiasgaitan-production.up.railway.app/authors](https://proyectom2matiasgaitan-production.up.railway.app/authors)
+[https://proyectom2matiasgaitan-production.up.railway.app](https://proyectom2matiasgaitan-production.up.railway.app)
 
 Las rutas principales son `/authors` , `/posts` y `/comments`.
 
