@@ -534,6 +534,10 @@ Para ejecutar coverage:
 npm run test:coverage
 ```
 
+## 🧠 Documentacion de uso de IA
+[https://drive.google.com/drive/folders/1cetLgQo5cwm6eOAC98XV79UuvfgzDalB?usp=drive_link](https://drive.google.com/drive/folders/1cetLgQo5cwm6eOAC98XV79UuvfgzDalB?usp=drive_link)
+
+
 ## 📝 Notas
 
 - El archivo `.env.example` sirve como referencia para las variables necesarias.
