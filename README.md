@@ -22,7 +22,7 @@ Proyecto construido con Node.js, Express, PostgreSQL y `pg`. Desplegado en Railw
 
 ## 🌐 URL Base
 
-[https://proyectom2matiasgaitan-production.up.railway.app](https://proyectom2matiasgaitan-production.up.railway.app)
+[https://proyectom2matiasgaitan-production.up.railway.app/authors](https://proyectom2matiasgaitan-production.up.railway.app/authors)
 
 Las rutas principales son `/authors` , `/posts` y `/comments`.
 
