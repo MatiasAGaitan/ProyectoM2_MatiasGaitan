@@ -21,11 +21,17 @@ API REST para gestionar autores, posts y comentarios de un blog. Permite operaci
 
 Proyecto construido con Node.js, Express, PostgreSQL y `pg`. Desplegado en Railway.
 
-## 🌐 URL Base
+## 🌐 URL principales
 
-[https://proyectom2matiasgaitan-production.up.railway.app](https://proyectom2matiasgaitan-production.up.railway.app)
 
-Las rutas principales son `/authors` , `/posts` y `/comments`.
+[https://proyectom2matiasgaitan-production.up.railway.app/api-docs](https://proyectom2matiasgaitan-production.up.railway.app/api-docs) - Swagger
+
+[https://proyectom2matiasgaitan-production.up.railway.app/authors](https://proyectom2matiasgaitan-production.up.railway.app/authors) - Muestra los autores
+
+[https://proyectom2matiasgaitan-production.up.railway.app/posts](https://proyectom2matiasgaitan-production.up.railway.app/posts) - Muestra los post 
+
+[https://proyectom2matiasgaitan-production.up.railway.app/comments](https://proyectom2matiasgaitan-production.up.railway.app/comments) - Muestra los comentarios
+
 
 ## 🛠️ Tecnologias
 
